@@ -4,7 +4,7 @@ import { Button } from 'semantic-ui-react'
 class Modal extends Component {
 
   render() {
-    const { _id, i, title, description, image, created_at, image_id } = this.props.img;
+    const { _id, i, title, description, image/*, created_at, image_id*/ } = this.props.img;
 
     return (
       <div className="ui modal">

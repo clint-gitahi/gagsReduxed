@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'semantic-ui-react';
-import { Link, browserHistory } from 'react-router';
+import { Link, } from 'react-router';
 import { Form } from '../components'
 
 class AddImage extends Component {

@@ -4,7 +4,7 @@ import { Image, Button, Icon } from 'semantic-ui-react';
 
 export default class Photo extends Component {
   render() {
-    const { _id, i, title, description, image, created_at, image_id, deletePhoto, toggle } = this.props;
+    const { _id, i, title, description, image, /*created_at, image_id,*/ deletePhoto, toggle } = this.props;
 
     return (
       <div className="column">

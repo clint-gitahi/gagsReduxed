@@ -56,10 +56,10 @@ timer() {
 
   render() {
     let {imagePrev} = this.state;
-    let imagePreview = null;
-    if (imagePrev) {
-      imagePreview = ( <img src={imagePrev} /> );
-    }
+    // let imagePreview = null;
+    // if (imagePrev) {
+    //   imagePreview = ( <img src={imagePrev} /> );
+    // }
 
     return (
       <div>
