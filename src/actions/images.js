@@ -2,7 +2,11 @@ import {
   GET_IMAGES,
   GET_IMAGES_SUCCESS,
   GET_IMAGES_FAILURE,
-  SET_SEARCH_BAR
+  SET_SEARCH_BAR,
+  SELECTED_PHOTO,
+  DELETE_PHOTO,
+  DELETE_PHOTO_SUCCESS,
+  DELETE_PHOTO_FAILURE,
 } from '../constants/images';
 
 // dispatch this function in the ImageContainer.
@@ -20,10 +24,9 @@ function getImagesSuccess(images) {
   };
 }
 
-function getImagesFailure(err) {
+function getImagesFailure() {
   return {
-    type: GET_IMAGES_FAILURE,
-    err
+    type: GET_IMAGES_FAILURE
   }
 }
 
@@ -35,9 +38,37 @@ function setSearchBar(words) {
   }
 }
 
+function selectedPhoto(photo) {
+  return {
+    type: SELECTED_PHOTO,
+    photo
+  };
+}
+
+function deletePhoto() {
+  return {
+    type: DELETE_PHOTO
+  }
+}
+
+function deletePhotoSuccess(images) {
+  type: DELETE_PHOTO_SUCCESS,
+  images
+};
+
+function deletePhotoFailure() {
+  return {
+    type: DELETE_PHOTO_FAILURE
+  }
+}
+
 export {
   getImages,
   getImagesSuccess,
   getImagesFailure,
-  setSearchBar
+  setSearchBar,
+  selectedPhoto,
+  deletePhoto,
+  deletePhotoFailure,
+  deletePhotoSuccess
 };

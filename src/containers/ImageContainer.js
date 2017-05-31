@@ -10,11 +10,6 @@ class ImageContainer extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      selectedPhoto: {},
-    };
-
-
     this.toggle = this.toggle.bind(this);
     this.deletePhotos = this.deletePhotos.bind(this);
     this.setsearchBar = this.setsearchBar.bind(this);
@@ -25,9 +20,8 @@ class ImageContainer extends Component {
   }
 
   toggle(index) {
-    this.setState({
-      selectedPhoto: this.state.photos[index]
-    });
+    // we dispatch and toggle the modal.
+    this.props.imageActions.selectedPhoto(this.props.photos[index])
     const $ = window.$;
     $('.ui.modal')
   .modal('show')
@@ -39,21 +33,7 @@ class ImageContainer extends Component {
   }
 
   deletePhotos(id) {
-    console.log('deleting....', id);
-    fetch(`http://localhost:4000/gram/${id}`, {
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      }),
-      method: 'DELETE',
-    })
-    .then(res => res.json())
-    .then(res => {
-      this.setState({
-        photos: this.state.photos.filter(img => img._id !== id)
-      })
-      console.log(res.message);
-      console.log(this.state);
-    })
+    this.props.imageActions.deletePhoto(id)
   }
 
   // dispatch the action
@@ -62,8 +42,7 @@ class ImageContainer extends Component {
   }
 
   render() {
-    const { selectedPhoto } = this.state;
-    const { photos, search } = this.props;
+    const { photos, search, selectedPhoto } = this.props;
 
     return (
       <div>
@@ -87,7 +66,8 @@ class ImageContainer extends Component {
 function mapStateToProps(state) {
   return {
     photos: state.getIn(['images', 'list'], Immutable.List()).toJS(),
-    search: state.getIn(['images', 'searchword'], '')
+    search: state.getIn(['images', 'searchword'], ''),
+    selectedPhoto: state.getIn(['images', 'selectedPhoto'], Immutable.List()).toJS()
   }
 }
 

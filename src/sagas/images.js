@@ -1,8 +1,8 @@
 import { takeLatest } from 'redux-saga/effects';
-import { put, call } from 'redux-saga/effects';
-import { GET_IMAGES } from '../constants/images';   // saga handles the GET_IMAGES actions.
-import { getImagesSuccess, getImagesFailure } from '../actions/images';
-import fetch from 'isomorphic-fetch';
+import { put, call, select } from 'redux-saga/effects';
+import { GET_IMAGES, DELETE_PHOTO } from '../constants/images';   // saga handles the GET_IMAGES actions.
+import { getImagesSuccess, getImagesFailure, deletePhotoFailure, deletePhotoSuccess } from '../actions/images';
+// import fetch from 'isomorphic-fetch';
 
 // we fetch the images.
 const fetchImages = () => {
@@ -32,6 +32,42 @@ function* watchGetImages() {
   yield takeLatest(GET_IMAGES, getImages);    // we use takeLatest so that it will cancel previous tasks.
 }
 
+///////////***************** DELETING ********///////////
+// selector function to return the images list from state.
+const selectedImages = (state) => {
+  return state.getIn(['images', 'list']).toJS();
+}
+
+const deleteImagebackend = (id) => {
+  return fetch(`http://localhost:4000/gram/${id}`, {
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+    method: 'DELETE',
+  })
+  .then(res => res.json())
+}
+
+function* deleteImage(action) {
+  const { id } = action;
+  // we take images from the state.
+  const imgs = yield select(selectedImages);
+  try {
+    yield call(deleteImagebackend, id);
+    // the new state will contian the images except for the deleted one.
+    yield put(deletePhotoSuccess(imgs.filter(img => img._id !== id)));
+
+  } catch(err) {
+    yield put(deletePhotoFailure())
+  }
+}
+
+// this watcher intercepts the action and runs deleteImage.
+function* watchDeleteImage() {
+  yield takeLatest(DELETE_PHOTO, deleteImage)
+}
+
 export {
-  watchGetImages
+  watchGetImages,
+  watchDeleteImage
 };
