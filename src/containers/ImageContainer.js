@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-// import jquery from 'jquery';
-import { PhotoList, Modal } from '../components'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';   // wrap action creators in dispatch calls.
+import Immutable from 'immutable';
+
+import * as imageActionCreators from '../actions/images';
+import { PhotoList, Modal } from '../components';
 
 class ImageContainer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      photos: [],
       selectedPhoto: {},
       search: ''
     };
@@ -20,7 +23,6 @@ class ImageContainer extends Component {
 
   componentDidMount() {
     this.getPhotos();
-    console.log(this.state.photos)
   }
 
   toggle(index) {
@@ -34,13 +36,7 @@ class ImageContainer extends Component {
   }
 
   getPhotos() {
-    fetch('http://localhost:4000/gram', {
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    })
-    .then(res => res.json())
-    .then(data => this.setState({ photos: data}))
+    this.props.imageActions.getImages();
   }
 
   deletePhotos(id) {
@@ -66,7 +62,8 @@ class ImageContainer extends Component {
   }
 
   render() {
-    const { photos, selectedPhoto, search } = this.state;
+    const { selectedPhoto, search } = this.state;
+    const { photos } = this.props;
 
     return (
       <div>
@@ -86,4 +83,18 @@ class ImageContainer extends Component {
   }
 }
 
-export default ImageContainer;
+// give our  container access to the state information as props.
+function mapStateToProps(state) {
+  return {
+    photos: state.getIn(['images', 'list'], Immutable.List()).toJS()
+  }
+}
+
+// dispatch actions to the reducer and sagas.
+function mapDispatchToProps(dispatch) {
+  return {
+    imageActions: bindActionCreators(imageActionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ImageContainer);
