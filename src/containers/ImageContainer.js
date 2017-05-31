@@ -12,7 +12,6 @@ class ImageContainer extends Component {
 
     this.state = {
       selectedPhoto: {},
-      search: ''
     };
 
 
@@ -57,13 +56,14 @@ class ImageContainer extends Component {
     })
   }
 
+  // dispatch the action
   setsearchBar(e) {
-    this.setState({ search: e.target.value.toLowerCase() })
+    this.props.imageActions.setSearchBar(e.target.value.toLowerCase());
   }
 
   render() {
-    const { selectedPhoto, search } = this.state;
-    const { photos } = this.props;
+    const { selectedPhoto } = this.state;
+    const { photos, search } = this.props;
 
     return (
       <div>
@@ -86,7 +86,8 @@ class ImageContainer extends Component {
 // give our  container access to the state information as props.
 function mapStateToProps(state) {
   return {
-    photos: state.getIn(['images', 'list'], Immutable.List()).toJS()
+    photos: state.getIn(['images', 'list'], Immutable.List()).toJS(),
+    search: state.getIn(['images', 'searchword'], '')
   }
 }
 
